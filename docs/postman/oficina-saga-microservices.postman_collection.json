@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Oficina Fase 4 — Saga",
+    "name": "Oficina — Saga (microsserviços)",
     "description": "Fluxo direto nos microsserviços. baseUrl = OS (8000), billingUrl (8003), executionUrl (8002).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

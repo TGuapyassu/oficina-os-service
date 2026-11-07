@@ -319,7 +319,6 @@ flowchart TB
 | Ficheiro | Conteúdo |
 |----------|-----------|
 | `docs/ddd_documentacao_event_storming.md` | **Este ficheiro** — documentação DDD completa: Event Storming, linguagem ubíqua, diagramas Mermaid. |
-| `docs/ddd_documentacao_entrega.md` | Cópia de entrega (conteúdo idêntico), útil para submissão ou PDF. |
 
 - Implementação: `app/domain`, `app/application`, `app/presentation` conforme README geral.
 

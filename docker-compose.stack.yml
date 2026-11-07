@@ -1,7 +1,7 @@
-# Stack local Fase 4 — 3 microsserviços (sem BFF). Execute a partir deste diretório:
+# Stack local: 3 microsserviços + Postgres, RabbitMQ, Redis e MongoDB.
 #   docker compose -f docker-compose.stack.yml up --build
 # Requer pastas irmãs: ../oficina-billing-service e ../oficina-execution-service
-# Contratos: pip instala via Git (Dockerfile) ou monte ../oficina-contracts se existir localmente.
+# Contratos: instalados no build via CONTRACTS_GIT_URL no Dockerfile.
 
 services:
   postgres-os:
