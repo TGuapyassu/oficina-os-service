@@ -1,0 +1,51 @@
+.........................................                                [100%]
+=============================== warnings summary ===============================
+../../../../../tmp/pos-test-venv/lib/python3.12/site-packages/ddtrace/internal/module.py:305
+  /tmp/pos-test-venv/lib/python3.12/site-packages/ddtrace/internal/module.py:305: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    self.loader.exec_module(module)
+
+../../../../../tmp/pos-test-venv/lib/python3.12/site-packages/ddtrace/internal/module.py:305
+  /tmp/pos-test-venv/lib/python3.12/site-packages/ddtrace/internal/module.py:305: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+    self.loader.exec_module(module)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name                                             Stmts   Miss  Cover   Missing
+------------------------------------------------------------------------------
+app/application/dtos/auth_dto.py                     8      0   100%
+app/application/dtos/cliente_dto.py                 16      0   100%
+app/application/dtos/ordem_dto.py                   56      0   100%
+app/application/dtos/peca_dto.py                    26      1    96%   20
+app/application/dtos/servico_dto.py                 21      1    95%   19
+app/application/dtos/veiculo_dto.py                 20      0   100%
+app/application/mapping/dto_mappers.py              22      0   100%
+app/application/ports/auth_gateway.py                3      0   100%
+app/application/ports/email_notifier.py              3      0   100%
+app/application/saga/os_handlers.py                 66     43    35%   28-37, 45-68, 72-74, 78-80, 87-90, 94-98, 102-104, 108-111
+app/application/services/os_status_notifier.py      19      2    89%   20, 23
+app/application/use_cases/auth.py                   17      1    94%   23
+app/application/use_cases/cliente.py                34     14    59%   29-32, 35-43, 46
+app/application/use_cases/ordem_servico.py         181     36    80%   63, 68, 78, 97, 131, 142, 169, 189, 209, 228-229, 232-239, 249-251, 254-281, 303
+app/application/use_cases/peca.py                   41     11    73%   31, 35-42, 47, 56
+app/application/use_cases/servico_oficina.py        31     12    61%   28-31, 34-40, 43
+app/application/use_cases/veiculo.py                45     22    51%   22, 38-40, 43-46, 49-61, 64
+app/domain/entities/cliente.py                      12      0   100%
+app/domain/entities/ordem_servico.py                82      2    98%   88, 92
+app/domain/entities/peca.py                         29      4    86%   27, 35-37
+app/domain/entities/servico_oficina.py              12      0   100%
+app/domain/entities/usuario.py                      12      0   100%
+app/domain/entities/veiculo.py                      14      0   100%
+app/domain/enums/os_status.py                       10      0   100%
+app/domain/exceptions.py                            17      0   100%
+app/domain/services/ordem_servico_listagem.py       17      0   100%
+app/domain/services/ordem_servico_status.py         22      1    95%   47
+app/domain/value_objects/cpf_cnpj.py                47      6    87%   25, 27, 29, 37, 46, 60
+app/domain/value_objects/dinheiro.py                25      6    76%   21, 27-29, 32, 37
+app/domain/value_objects/placa.py                   22      2    91%   23, 35
+------------------------------------------------------------------------------
+TOTAL                                              930    164    82%
+Coverage HTML written to dir docs/evidencias/htmlcov
+Required test coverage of 80% reached. Total coverage: 82.37%
+41 passed, 2 warnings in 2.30s

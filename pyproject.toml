@@ -45,7 +45,7 @@ include = ["app*"]
 testpaths = ["tests"]
 pythonpath = ["."]
 # Cobertura mínima de 80% nos domínios críticos: núcleo (regras) + casos de uso — ver README.
-addopts = "-q --tb=short --cov=app/domain --cov=app/application --cov-report=term-missing --cov-fail-under=80"
+addopts = "-q --tb=short --cov=app/domain --cov=app/application --cov-report=term-missing --cov-report=html:docs/evidencias/htmlcov --cov-fail-under=80"
 
 [tool.coverage.run]
 source = ["app/domain", "app/application"]

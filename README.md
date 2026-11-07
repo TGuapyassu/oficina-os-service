@@ -54,7 +54,7 @@ pip install -e ".[dev]"
 pytest --cov-report=term-missing --cov-report=html
 ```
 
-Artefato CI: **coverage-report**. Evidências: [`docs/evidencias/`](docs/evidencias/).
+Artefato CI: **coverage-report**. Evidências: [`docs/evidencias/`](docs/evidencias/) (relatório `cobertura-local.txt` + resumo visual).
 
 ## Deploy Kubernetes
 
