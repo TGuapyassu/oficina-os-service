@@ -18,4 +18,4 @@ flowchart LR
 
 ## Referência Saga
 
-Detalhes de eventos: [saga-events.md](saga-events.md). ADR global no BFF: [ADR-004](https://github.com/TGuapyassu/oficina-api/blob/main/docs/architecture/adr/ADR-004-saga-choreography-rabbitmq.md).
+Detalhes de eventos: [saga-events.md](saga-events.md). ADR: [ADR-004](adr/ADR-004-saga-choreography-rabbitmq.md).

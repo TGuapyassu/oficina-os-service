@@ -1,0 +1,113 @@
+{
+  "info": {
+    "name": "Oficina Fase 4 — Saga",
+    "description": "Fluxo direto nos microsserviços. baseUrl = OS (8000), billingUrl (8003), executionUrl (8002).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" },
+    { "key": "billingUrl", "value": "http://localhost:8003" },
+    { "key": "executionUrl", "value": "http://localhost:8002" },
+    { "key": "osUrl", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" },
+    { "key": "osId", "value": "1" },
+    { "key": "internalKey", "value": "dev-internal-key" }
+  ],
+  "item": [
+    {
+      "name": "Saga — fluxo feliz",
+      "item": [
+        {
+          "name": "1 Login admin",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 200) {",
+                "  pm.collectionVariables.set('token', pm.response.json().access_token);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@oficina.local\",\n  \"senha\": \"admin123\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "2 Criar OS",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 201) {",
+                "  pm.collectionVariables.set('osId', pm.response.json().id);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente_id\": 1,\n  \"veiculo_id\": 1,\n  \"servicos\": [{\"servico_id\": 1, \"quantidade\": 1}],\n  \"pecas\": [{\"peca_id\": 1, \"quantidade\": 1}]\n}"
+            },
+            "url": "{{baseUrl}}/os"
+          }
+        },
+        {
+          "name": "3 Aguardar orçamento (Billing)",
+          "request": {
+            "method": "GET",
+            "url": "{{billingUrl}}/orcamentos/os/{{osId}}"
+          }
+        },
+        {
+          "name": "4 Aprovar orçamento",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"aprovado\": true\n}" },
+            "url": "{{billingUrl}}/orcamentos/os/{{osId}}/decisao"
+          }
+        },
+        {
+          "name": "5 Simular pagamento aprovado",
+          "request": {
+            "method": "POST",
+            "url": "{{billingUrl}}/orcamentos/os/{{osId}}/pagamento/simular-aprovado"
+          }
+        },
+        {
+          "name": "6 Consultar OS",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/os/{{osId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saga — falha (billing indisponível)",
+      "item": [
+        {
+          "name": "GET internal items (deve falhar se OS down)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Internal-Service-Key", "value": "{{internalKey}}" }],
+            "url": "{{osUrl}}/internal/os/{{osId}}/items"
+          }
+        }
+      ]
+    }
+  ]
+}
