@@ -19,14 +19,14 @@ Persistência principal: **PostgreSQL**. Opcional: **MongoDB** (eventos/timeline
 | OS (este) | `oficina-os-service` | 8000 |
 | Billing | `oficina-billing-service` | 8003 |
 | Execution | `oficina-execution-service` | 8002 |
-| Contratos | `oficina-contracts` via pip/Git `v0.1.0` | — |
+| Contratos | [`oficina-contracts/`](oficina-contracts/) (local, v0.1.0) | — |
 
 Arquitetura detalhada: [`docs/architecture/`](docs/architecture/) · visão dos serviços: [`docs/architecture/components.md`](docs/architecture/components.md).
 
 ## Pré-requisitos
 
 - Python **3.11+** e Docker / Docker Compose (para stack completa).
-- Pacote [`oficina-contracts`](https://github.com/TGuapyassu/oficina-contracts) publicado no Git ou instalado localmente (exigido pelo `pip install` e pelo build da imagem Docker).
+- Pacote vendored [`oficina-contracts/`](oficina-contracts/) neste repositório (Docker e `pip install -e ./oficina-contracts` antes do serviço).
 
 ## Como rodar
 
@@ -68,7 +68,7 @@ API em http://localhost:8000/docs.
 ### Desenvolvimento local (Python)
 
 ```bash
-pip install "oficina-contracts @ git+https://github.com/TGuapyassu/oficina-contracts.git@v0.1.0"
+pip install -e ./oficina-contracts
 pip install -e ".[dev]"
 export DATABASE_URL=postgresql+psycopg2://oficina:oficina@localhost:5432/oficina_os
 export RABBITMQ_URL=amqp://guest:guest@localhost:5672/   # opcional

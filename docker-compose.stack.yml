@@ -1,7 +1,7 @@
 # Stack local: 3 microsserviços + Postgres, RabbitMQ, Redis e MongoDB.
 #   docker compose -f docker-compose.stack.yml up --build
 # Requer pastas irmãs: ../oficina-billing-service e ../oficina-execution-service
-# Contratos: instalados no build via CONTRACTS_GIT_URL no Dockerfile.
+# Contratos: pacote local em ./oficina-contracts (billing/execution usam additional_contexts).
 
 services:
   postgres-os:
@@ -48,8 +48,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        CONTRACTS_GIT_URL: https://github.com/TGuapyassu/oficina-contracts.git@v0.1.0
     ports: ["8000:8000"]
     environment:
       APP_ENV: development
@@ -59,6 +57,9 @@ services:
       INTERNAL_SERVICE_KEY: dev-internal-key
       JWT_SECRET: ${JWT_SECRET:-defina-um-segredo-longo-para-producao}
       RUN_MIGRATIONS: "true"
+      RUN_SEED_ADMIN: "true"
+      ADMIN_EMAIL: admin@oficina.dev
+      ADMIN_SENHA: admin123
     depends_on:
       postgres-os: { condition: service_healthy }
       rabbitmq: { condition: service_started }
@@ -67,6 +68,8 @@ services:
     build:
       context: ../oficina-billing-service
       dockerfile: Dockerfile
+      additional_contexts:
+        contracts: ./oficina-contracts
     ports: ["8003:8003"]
     environment:
       DATABASE_URL: postgresql+psycopg2://oficina:oficina@postgres-billing:5432/oficina_billing
@@ -80,6 +83,8 @@ services:
     build:
       context: ../oficina-execution-service
       dockerfile: Dockerfile
+      additional_contexts:
+        contracts: ./oficina-contracts
     ports: ["8002:8002"]
     environment:
       DATABASE_URL: postgresql+psycopg2://oficina:oficina@postgres-execution:5432/oficina_execution

@@ -60,7 +60,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@oficina.local\",\n  \"senha\": \"admin123\"\n}"
+              "raw": "{\n  \"email\": \"admin@oficina.dev\",\n  \"senha\": \"admin123\"\n}"
             },
             "url": "{{baseUrl}}/auth/login"
           }

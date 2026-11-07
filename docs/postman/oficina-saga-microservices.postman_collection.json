@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Oficina — Saga (microsserviços)",
-    "description": "Fluxo direto nos microsserviços. baseUrl = OS (8000), billingUrl (8003), executionUrl (8002).",
+    "description": "Fluxo direto nos microsserviços. Execute a pasta na ordem. baseUrl=8000, billingUrl=8003, executionUrl=8002.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -10,7 +10,11 @@
     { "key": "executionUrl", "value": "http://localhost:8002" },
     { "key": "osUrl", "value": "http://localhost:8000" },
     { "key": "token", "value": "" },
-    { "key": "osId", "value": "1" },
+    { "key": "clienteId", "value": "" },
+    { "key": "veiculoId", "value": "" },
+    { "key": "servicoId", "value": "" },
+    { "key": "pecaId", "value": "" },
+    { "key": "osId", "value": "" },
     { "key": "internalKey", "value": "dev-internal-key" }
   ],
   "item": [
@@ -33,8 +37,109 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@oficina.local\",\n  \"senha\": \"admin123\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@oficina.dev\",\n  \"senha\": \"admin123\"\n}" },
             "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "1b Criar cliente",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 201 || pm.response.code === 200) {",
+                "  pm.collectionVariables.set('clienteId', pm.response.json().id);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Demo\",\n  \"contato\": \"maria@exemplo.com\",\n  \"cpf_cnpj\": \"52998224725\"\n}"
+            },
+            "url": "{{baseUrl}}/clientes"
+          }
+        },
+        {
+          "name": "1c Criar veículo",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 201 || pm.response.code === 200) {",
+                "  pm.collectionVariables.set('veiculoId', pm.response.json().id);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente_id\": {{clienteId}},\n  \"placa\": \"ABC1234\",\n  \"marca\": \"Fiat\",\n  \"modelo\": \"Uno\",\n  \"ano\": 2015\n}"
+            },
+            "url": "{{baseUrl}}/veiculos"
+          }
+        },
+        {
+          "name": "1d Criar serviço",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 201 || pm.response.code === 200) {",
+                "  pm.collectionVariables.set('servicoId', pm.response.json().id);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Troca de óleo\",\n  \"preco\": \"100.00\"\n}" },
+            "url": "{{baseUrl}}/servicos"
+          }
+        },
+        {
+          "name": "1e Criar peça",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 201 || pm.response.code === 200) {",
+                "  pm.collectionVariables.set('pecaId', pm.response.json().id);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Filtro de óleo\",\n  \"preco\": \"25.00\",\n  \"quantidade_estoque\": 10\n}"
+            },
+            "url": "{{baseUrl}}/pecas"
           }
         },
         {
@@ -58,13 +163,31 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cliente_id\": 1,\n  \"veiculo_id\": 1,\n  \"servicos\": [{\"servico_id\": 1, \"quantidade\": 1}],\n  \"pecas\": [{\"peca_id\": 1, \"quantidade\": 1}]\n}"
+              "raw": "{\n  \"cliente_id\": {{clienteId}},\n  \"veiculo_id\": {{veiculoId}},\n  \"servicos\": [{\"servico_id\": {{servicoId}}, \"quantidade\": 1}],\n  \"pecas\": [{\"peca_id\": {{pecaId}}, \"quantidade\": 1}]\n}"
             },
             "url": "{{baseUrl}}/os"
           }
         },
         {
           "name": "3 Aguardar orçamento (Billing)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const max = 15;",
+                "let n = parseInt(pm.collectionVariables.get('budgetPoll') || '0', 10);",
+                "if (pm.response.code === 404 && n < max) {",
+                "  pm.collectionVariables.set('budgetPoll', String(n + 1));",
+                "  setTimeout(function () {}, 2000);",
+                "  postman.setNextRequest(pm.info.requestName);",
+                "} else {",
+                "  pm.collectionVariables.unset('budgetPoll');",
+                "  pm.test('Orçamento criado pela Saga', function () { pm.expect(pm.response.code).to.eql(200); });",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
           "request": {
             "method": "GET",
             "url": "{{billingUrl}}/orcamentos/os/{{osId}}"

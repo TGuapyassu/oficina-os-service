@@ -1,8 +1,12 @@
 """
 Cria usuário administrador no banco. Uso (com tabelas já migradas):
-  export DATABASE_URL=...
-  export JWT_SECRET=...  (opcional para o script; já deve existir na app)
+
+  pip install -e "./oficina-contracts" && pip install -e ".[dev]"   # venv local
+  export DATABASE_URL=postgresql+psycopg2://oficina:oficina@localhost:5433/oficina_os
+  export JWT_SECRET=defina-um-segredo-longo-para-producao
   python scripts/seed_admin.py
+
+Na stack Docker, use RUN_SEED_ADMIN=true (já definido em docker-compose.stack.yml).
 """
 from __future__ import annotations
 
@@ -43,7 +47,7 @@ def main() -> None:
     s = S()
     try:
         urep = SqlAlchemyUsuarioRepository(s)
-        email = os.environ.get("ADMIN_EMAIL", "admin@oficina.local")
+        email = os.environ.get("ADMIN_EMAIL", "admin@oficina.dev")
         if urep.get_by_email(email) is not None:
             print("Já existe usuário:", email)
             return
